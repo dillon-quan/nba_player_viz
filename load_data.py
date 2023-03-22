@@ -13,18 +13,30 @@ def get_team_id(team_name):
         return teams_df.loc[(teams_df.abbreviation == team_name.upper()), 'id'].values[0]
     return teams_df.loc[(teams_df.full_name.str.contains(team_name, regex=True, case=False)), 'id'].values[0]
 
-def get_regular_season_stats(player_name):
+def get_season_stats(player_name):
     player_id = get_player_id(player_name)
-    stats_df = playercareerstats.PlayerCareerStats(player_id=player_id).get_data_frames()[0]
-    return stats_df
+    stats_df = playercareerstats.PlayerCareerStats(player_id=player_id, 
+                                                   per_mode36='PerGame').get_data_frames()
+    reg_season_df = stats_df[0]
+    reg_season_df['SEASON_TYPE'] = 'Regular Season'
+    post_season_df = stats_df[2]
+    post_season_df['SEASON_TYPE'] = 'Playoffs'
+    df = pd.concat([reg_season_df, post_season_df])
+    return df
 
-def get_shot_chart_detail(player_id, team_id, season):
-    shot_chart_df = shotchartdetail.ShotChartDetail(team_id=team_id, 
+def get_shot_chart_detail(player_id, team_id, season_id, season_type):
+    shot_chart_dfs = shotchartdetail.ShotChartDetail(team_id=team_id, 
                                                     player_id=player_id, 
-                                                    season_type_all_star='Regular Season', 
+                                                    season_type_all_star=season_type, 
                                                     context_measure_simple='FGA',
-                                                    season_nullable=season).get_data_frames()[0]
-    return shot_chart_df
+                                                    season_nullable=season_id).get_data_frames()
+    player_shot_df = shot_chart_dfs[0]
+    league_avg_df = shot_chart_dfs[1]
+    player_shot_df['SEASON_ID'] = season_id
+    player_shot_df['SEASON_TYPE'] = season_type
+    league_avg_df['SEASON_ID'] = season_id
+    league_avg_df['SEASON_Type'] = season_type
+    return player_shot_df, league_avg_df
 
 
 
