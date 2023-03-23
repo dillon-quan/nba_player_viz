@@ -76,6 +76,7 @@ def serve_layout():
     )
 
 app.layout = serve_layout
+server = app.server
 
 # nba_api data request
 @app.callback(
@@ -148,14 +149,6 @@ def display_detail(json_str_data):
                              'BIRTHDATE': 'BORN',
                              'TEAM_ABBREVIATION': 'TEAM'})
     return df.to_dict('records')
-    # text =  f"""Name: {df.DISPLAY_FIRST_LAST.values[0]}
-    #             Born: {df.BIRTHDATE.values[0]}
-    #             Position: {df.POSITION.values[0]}
-    #             Team: {df.TEAM_ABBREVIATION.values[0]}
-    #             Height: {df.HEIGHT.values[0]}
-    #             Weight: {df.WEIGHT.values[0]}
-    # """
-    # return text
     
     
 @app.callback(
@@ -257,4 +250,4 @@ def plot_sos_shots(json_str_data, post_flag):
     return fig
 
 if __name__ == '__main__':
-    app.run_server(port="4000", debug=True)
+    app.run_server(debug=False)
