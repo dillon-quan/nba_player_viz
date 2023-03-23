@@ -1,5 +1,6 @@
 import pandas as pd
-from nba_api.stats.endpoints import playercareerstats, shotchartdetail
+from nba_api.stats.endpoints import (commonplayerinfo, playercareerstats,
+                                     shotchartdetail)
 from nba_api.stats.static import players, teams
 
 
@@ -12,6 +13,11 @@ def get_team_id(team_name):
     if len(team_name) <= 3:
         return teams_df.loc[(teams_df.abbreviation == team_name.upper()), 'id'].values[0]
     return teams_df.loc[(teams_df.full_name.str.contains(team_name, regex=True, case=False)), 'id'].values[0]
+
+def get_player_detail(player_id):
+    detail_df = commonplayerinfo.CommonPlayerInfo(player_id=player_id).get_data_frames()[0]
+    detail_df['BIRTHDATE'] = detail_df['BIRTHDATE'].str.split('T')[0][0]
+    return detail_df
 
 def get_season_stats(player_name):
     player_id = get_player_id(player_name)
