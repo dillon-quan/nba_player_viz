@@ -1,0 +1,7 @@
+json
+dash
+dash-daq
+pandas
+plotly
+numpy
+nba_api
