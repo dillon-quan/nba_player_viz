@@ -20,10 +20,10 @@ def serve_layout():
 
     return html.Div(children=[
         # Store data requests from nba API
-        dcc.Store(id='player-stat-info', storage_type='local'),
-        dcc.Store(id='shot-chart-info', storage_type='local'),
-        dcc.Store(id='league-avg-info', storage_type='local'),
-        dcc.Store(id='player-detail-info', storage_type='local'),
+        dcc.Store(id='player-stat-info'),
+        dcc.Store(id='shot-chart-info'),
+        dcc.Store(id='league-avg-info'),
+        dcc.Store(id='player-detail-info'),
         
         # app layout
         html.Div(children=[
@@ -91,7 +91,6 @@ def get_player_data_(n_clicks, player_name):
     if n_clicks:
         stats_df = get_season_stats(player_name=player_name)
         detail_df = get_player_detail(player_id=stats_df.PLAYER_ID.values[0])
-        print(detail_df)
         shot_charts, league_avgs = [], []
         n_seasons = stats_df.SEASON_ID.unique()
         if len(n_seasons) > 8:
